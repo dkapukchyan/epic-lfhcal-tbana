@@ -27,6 +27,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(ROOT REQUIRED COMPONENTS Core RIO Hist Tree Gpad Graf)
 include(${ROOT_USE_FILE})
 
+find_package(MyTools 4.0 CONFIG REQUIRED HINTS /Users/davidkapukchyan/Documents/myProjects/Tools/MyTools/install )
+include_directories( ${MyTools_INSTALL_INCLUDE} )
+
 # Add common compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fPIC -ansi -Wno-overloaded-virtual -Wno-long-long -fno-common")
 
@@ -161,6 +164,13 @@ target_link_libraries(DataAna LFHCAL Analysis WaveformFitting ${ROOT_LIBRARIES})
 if(H2G_DECODE_FOUND)
   target_compile_definitions(DataAna PRIVATE DECODE_HGCROC)
   target_link_libraries(DataAna h2g_decode)
+endif()
+
+add_executable(DataAnaNew DataAnaNew.cc DataAnalysis.cc)
+target_link_libraries(DataAnaNew LFHCAL Analysis WaveformFitting ${ROOT_LIBRARIES} MyTools::DataTools )
+if(H2G_DECODE_FOUND)
+  target_compile_definitions(DataAnaNew PRIVATE DECODE_HGCROC)
+  target_link_libraries(DataAnaNew h2g_decode)
 endif()
 
 # Display executable
